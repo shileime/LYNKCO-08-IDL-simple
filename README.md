@@ -1,20 +1,21 @@
 ```markdown
 > 🚗 50元实现领克08智驾小蓝灯 | ESP32 + EVCC 超简方案 |
-
+ESP32主板链接：https://item.taobao.com/item.htm?id=823042315028&mi_id=0000UEq26LaSY20KMpq517pt6S4_-dz2iyrjgV32TzdTn5Q&spm=tbpc.boughtlist.suborder_itemtitle.1.6cee2e8dCE8xpD
+推荐行车灯链接：https://item.taobao.com/item.htm?id=884230283410&mi_id=0000I5rHPnDeVoxXl5bjj9Zh-QpIy3uCV29TlhAuPDZ61oQ&spm=tbpc.boughtlist.suborder_itemtitle.1.6cee2e8dCE8xpD
 ---
 ### 效果展示
 
-![运行效果](./images/demo1.jpg)
-![车外效果](./images/demo2.jpg)
+![运行效果](./images/1.jpg)
+![车外效果](./images/2.jpg)
 
 ### 安装位置示意
 
-![安装位置](./images/install.jpg)
+![安装位置](./images/3.jpg)
 
 ---
 
 ## 接线图
-
+![接线图](./images/主板.jpg)
 
 ### 接线说明
 
