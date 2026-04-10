@@ -1,5 +1,12 @@
 ```markdown
 > 🚗 50元实现领克08智驾小蓝灯 | ESP32 + EVCC 超简方案 |
+吉利系智驾小蓝灯加装 —— 为吉利系及领克车型加装的安全警示装置。通过车机端 EVCC（ADB 安装）获取智驾状态数据，经蓝牙 BLE 广播至开发板，自动点亮小蓝灯，提醒周围交通参与者当前车辆正处于智驾或巡航模式。
+低成本DIY：开发板与小蓝灯均采用网购成品，即买即用成本控制在50元以下。
+灵活可控：支持手动停用，超时自动关灯
+本项目初衷：正视智驾系统尚不成熟，为长途巡航提供额外安全警示，让每一次辅助驾驶，都多一份看得见的提醒。
+项目开源地址：https://github.com/shileime/LYNKCO-08-IDL-simple/
+
+
 ESP32主板链接：https://item.taobao.com/item.htm?id=823042315028&mi_id=0000UEq26LaSY20KMpq517pt6S4_-dz2iyrjgV32TzdTn5Q&spm=tbpc.boughtlist.suborder_itemtitle.1.6cee2e8dCE8xpD
 推荐行车灯链接：https://item.taobao.com/item.htm?id=884230283410&mi_id=0000I5rHPnDeVoxXl5bjj9Zh-QpIy3uCV29TlhAuPDZ61oQ&spm=tbpc.boughtlist.suborder_itemtitle.1.6cee2e8dCE8xpD
 ---
