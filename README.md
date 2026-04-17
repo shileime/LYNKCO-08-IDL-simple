@@ -12,15 +12,21 @@
 - [推荐行车灯链接（淘宝）](https://item.taobao.com/item.htm?id=884230283410)
 
 ---
+### 注意事项！！！
+默认方案新发现问题：电压过高（14v）,灯带散热存在问题！
+解决方案：1.建议从胶套中取灯板直接安装
+        2.外加DC-DC稳压模块，稳压至12V
 
 ### 效果展示
 
-![运行效果](./image/1.jpg)
-![车外效果](./image/2.jpg)
+![车外效果](./image/08运行效果图.jpg)
 
 ### 安装位置示意
-
-![安装位置](./image/3.jpg)
+1.![尾箱保险盒ACC取电](./image/08后保险盒.jpg)
+2.左侧饰板内走线
+3.![通过胶套走线](./image/08尾门走线方式.jpg)
+4.![走线效果](./image/08尾门走线效果.jpg)
+5.![安装效果](./image/08尾门安装效果.jpg)
 
 ---
 
@@ -43,18 +49,19 @@
 
 ### 第二步：安装开发环境
 1. 安装 Arduino IDE  
-2. 添加 ESP32 开发板支持  
-3. 选择开发板：ESP32C3 Dev Module
+2. 添加 ESP32 开发板支持：文件-首选项-其他开发板管理地址
+   添加新的一行：https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+4. 选择开发板：ESP32C3 Dev Module及端口
+5. 添加库：1.NimBLE-Arduino(by h2zero)
+6. 如需查看调试信息记得打开"CDC":工具-USB CDC On Boot-"Enabled"，波特率115200
 
 ---
 
 ### 第三步：烧录程序
+1. 建议修改 `IDL.ino` 中 `IDL_COMPANY_ID = 0x2817;  //制造商ID` 为其他ID，避免冲突（虽然概率不大）
+2. 上传
+3. 主板boot按钮是切换调试模式用，用于打印所有广播信息，普通用户没有用，RST按钮是重启按钮。 
 
-1. 打开本项目代码  
-2. 连接开发板  
-3. 选择串口  
-4. 点击上传  
-建议修改 `IDL.ino` 中 `IDL_COMPANY_ID = 0x2817;  //制造商ID` 为其他ID，避免冲突（虽然概率不大）
 ---
 
 ### 第四步：接入车辆
