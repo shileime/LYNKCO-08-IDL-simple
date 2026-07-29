@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <NimBLEDevice.h>
 #include "var.h"
-static String ver="s.1.0.0";
+static String ver = "s.1.1.0";
 // ===================== 引脚定义 =====================
 static constexpr uint8_t PIN_LED = 3;
 static constexpr uint8_t PIN_BUTTON = 9;
@@ -11,7 +11,7 @@ static constexpr uint8_t PIN_RELAY = 7;
 bool debugMode = false;
 
 void setup() {
-  Config();          //初始化IO
+  Config();  //初始化IO
   Serial.begin(115200);
   delay(3000);
   Serial.println("系统初始化...");
@@ -22,6 +22,7 @@ void setup() {
 
 void loop() {
   handleButton();  //按钮检查
-  IDLtimeOut();   //小蓝灯超时关闭
+  IDLtimeOut();    //小蓝灯超时关闭
   Serial_cmd();    //串口指令识别
+  BleTest();       //BLE测试
 }

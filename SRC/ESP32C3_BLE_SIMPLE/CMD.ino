@@ -1,6 +1,6 @@
-String inputBuffer = "";               // 串口接收缓冲区
-unsigned long lastCharTime = 0;        // 最后一次收到字符的时间
-const unsigned long TIMEOUT_MS = 100;  // 无新字符时，等待 100ms 后处理缓冲区数据
+String inputBuffer = "";             // 串口接收缓冲区
+unsigned long lastCharTime = 0;      // 最后一次收到字符的时间
+const unsigned long TIMEOUT_MS = 0;  // 无新字符时，等待 100ms 后处理缓冲区数据
 void Serial_cmd() {
   // 非阻塞读取串口数据
   while (Serial.available()) {
@@ -44,18 +44,25 @@ bool parseCommand(String cmd) {
     ESP.restart();
     return true;
   }
-  if (lowerCmd == "open") {
+  if (lowerCmd == "3") {
     openIDL();
     return true;
   }
-  if (lowerCmd == "auto") {
+  if (lowerCmd == "4") {
     openIDL_auto();
     return true;
   }
-  if (lowerCmd == "close") {
-    setRelay(0);
+  if (lowerCmd == "5") {
+    closeIDL();
     return true;
   }
+  if (lowerCmd == "d") {
+    debugMode = !debugMode;
+    Serial.print("Debug模式: ");
+    Serial.println(debugMode ? "开启" : "关闭");
+    return true;
+  }
+
   // 处理键值对指令（必须包含等号）
   int eqPos = lowerCmd.indexOf('=');
   if (eqPos == -1) {

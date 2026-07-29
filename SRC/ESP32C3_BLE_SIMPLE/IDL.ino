@@ -2,9 +2,10 @@
 bool Activate = true;  //是否启用控制
 bool IDL_state = false;
 bool IDL_autoClose = false;   //启用自动关闭
+bool bleTestMode = false;     //BLE广播测试模式
 uint32_t IDL_TIMEOUT = 3000;  //数据超时关闭
 // =================== 预设数据匹配 =====================
-uint16_t IDL_COMPANY_ID = 0x2817;  //制造商ID
+uint16_t IDL_COMPANY_ID = 0x2818;  //制造商ID
 
 uint8_t IDL_HEX_COMMANDS[] = {
   //预设指令
@@ -17,7 +18,9 @@ uint8_t IDL_HEX_COMMANDS[] = {
   0x06,  //车辆准备变道指示灯-左(智驾状态,系统准备变道的指示灯提示)
   0x07,  //车辆准备变道指示灯-右
   0x08,  //左变道(正在执行)
-  0x09   //右变道
+  0x09,  //右变道
+  0x10,  //BLE测试开(持续广播随机数据0x01-0x10)
+  0x0A   //BLE测试关
 };
 //IDL指令执行
 void IDL_String_COMMAND(String cmd) {  //暂不启用
@@ -39,7 +42,15 @@ void IDL_HEX_COMMAND(uint8_t id) {
       openIDL_auto();
       break;
     case 5:
-      setRelay(0);
+      closeIDL();
+      break;
+    case 10:
+      Serial.println("开启BLE测试模式");
+      bleTestMode = true;
+      break;
+    case 11:
+      Serial.println("关闭BLE测试模式");
+      bleTestMode = false;
       break;
     default:
       Serial.print("本控制器不支持此指令: ");
@@ -55,12 +66,19 @@ void openIDL_auto() {  //带超时自动关闭
     Serial.println("小蓝灯自动模式");
   }
 }
+void closeIDL() {
+  setRelay(0);
+  Serial.println("小蓝灯关闭");
+  uint8_t cmd = 0x00;
+  sendBLEBroadcast(&cmd, 1);
+}
 void openIDL() {
-
   if (Activate) {
     IDL_autoClose = false;  //停用超时关闭
     setRelay(1);
     Serial.println("手动小蓝灯开启");
+    uint8_t cmd = 0x01;
+    sendBLEBroadcast(&cmd, 1);
   }
 }
 //数据超时关闭小蓝灯
@@ -97,4 +115,15 @@ void setRelay(bool state) {
   digitalWrite(PIN_RELAY, state ? HIGH : LOW);
   digitalWrite(PIN_LED, state ? HIGH : LOW);
   lastMatchTime = millis();
+}
+unsigned long BleTestTime = 0;
+uint8_t cmd = 0x00;
+void BleTest() {
+  if (bleTestMode) {
+    if (millis() - BleTestTime >= 600) {
+      BleTestTime = millis();
+      cmd++;
+      sendBLEBroadcast(&cmd, 1);
+    }
+  }
 }

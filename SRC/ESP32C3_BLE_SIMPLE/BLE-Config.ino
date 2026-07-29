@@ -1,8 +1,11 @@
-static NimBLEScan* pScan;
-uint32_t SCAN_TIME_MS = 500;
+static NimBLEScan* pScan = nullptr;
+uint32_t SCAN_TIME_MS = 0;
+// ================== 广播对象 ==================
+static NimBLEAdvertising* pAdvertising = nullptr;
 // ===================== 扫描回调 =====================
 class MyCallbacks : public NimBLEScanCallbacks {
   void onResult(const NimBLEAdvertisedDevice* dev) override {
+    //Serial.println("dev");
     // Debug模式：打印所有设备
     printDevice(dev);
     // 匹配判断
@@ -17,9 +20,14 @@ void BLE_config() {
   NimBLEDevice::init("");
   pScan = NimBLEDevice::getScan();
   pScan->setScanCallbacks(new MyCallbacks());
+  pScan->setDuplicateFilter(false);
   pScan->setActiveScan(false);  //开启 ActiveScan 才会“主动询问设备要更多数据”
   pScan->setMaxResults(0);
   pScan->start(SCAN_TIME_MS, false, true);
+  // ----- 配置广播-----
+  // pAdvertising = NimBLEDevice::getAdvertising();
+  // pAdvertising->setMinInterval(160);  // 100 ms （160 * 0.625ms）
+  // pAdvertising->setMaxInterval(200);  // 125 ms
 }
 
 // ===================== 数据解析 =====================
@@ -31,7 +39,7 @@ void checkMatch(const NimBLEAdvertisedDevice* dev) {
   const uint8_t* data = (uint8_t*)mfg.data();
   uint16_t companyId = data[0] | (data[1] << 8);  // 小端序组合 Company ID
   if (companyId != IDL_COMPANY_ID) return;
-
+  //Serial.println("id匹配");
   size_t payloadLen = mfg.length() - 2;  // 实际数据长度（去掉 Company ID）
   if (!payloadLen >= 1) return;          // 数据大于等于1 字节
   uint8_t cmd = data[2];                 // 取出命令字节
@@ -73,4 +81,33 @@ void printDevice(const NimBLEAdvertisedDevice* dev) {
     return;
     Serial.println("制造商HEX数据: <无>");
   }
+}
+// ================== 发送 BLE 广播（非阻塞） ==================
+/**
+ * @brief  发送包含制造商数据的广播，不会阻塞正在运行的扫描
+ * @param  mfg     制造商 ID（2 字节，小端序）
+ * @param  payload 命令字节数组指针
+ * @param  len     命令字节长度
+ */
+// 全局设备名称，可自定义
+const char* DEVICE_NAME = "idl";
+
+void sendBLEBroadcast(const uint8_t* payload, size_t len) {
+  if (pAdvertising == nullptr) return;
+
+  // 构建制造商数据
+  std::string mfgStr(reinterpret_cast<const char*>(&IDL_COMPANY_ID), sizeof(IDL_COMPANY_ID));
+  std::string payloadStr(reinterpret_cast<const char*>(payload), len);
+  NimBLEAdvertisementData advData;
+  advData.setManufacturerData(mfgStr + payloadStr);
+
+  // 添加设备完整名称（也可用 setShortName 节省空间）
+  advData.setName(DEVICE_NAME);  // ⬅️ 新增
+
+  // 更新广播
+  if (pAdvertising->isAdvertising()) {
+    pAdvertising->stop();
+  }
+  pAdvertising->setAdvertisementData(advData);
+  pAdvertising->start();
 }
