@@ -5,7 +5,7 @@ bool IDL_autoClose = false;   //启用自动关闭
 bool bleTestMode = false;     //BLE广播测试模式
 uint32_t IDL_TIMEOUT = 3000;  //数据超时关闭
 // =================== 预设数据匹配 =====================
-uint16_t IDL_COMPANY_ID = 0x2818;  //制造商ID
+uint16_t IDL_COMPANY_ID = 0x2817;  //制造商ID
 
 uint8_t IDL_HEX_COMMANDS[] = {
   //预设指令
